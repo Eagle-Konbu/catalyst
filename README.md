@@ -16,7 +16,7 @@ Catalyst is a command-line tool for controlling smart appliances via the Nature 
 ### Build
 
 ```
-Task build
+task build
 ```
 
 Or manually:

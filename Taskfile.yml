@@ -3,8 +3,8 @@ version: '3'
 tasks:
   build:
     vars:
-      GOARCH: amd64
-      GOOS: linux
+      GOARCH: arm64
+      GOOS: darwin
     cmds:
       - GOARCH={{.GOARCH}} GOOS={{.GOOS}} go build -o bin/catalyst main.go
     sources:
