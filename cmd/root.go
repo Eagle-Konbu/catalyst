@@ -30,6 +30,8 @@ import (
 )
 
 var cfgFile string
+var id string
+var token string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -91,4 +93,8 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+
+	// 設定ファイルからid, tokenを読み込む
+	id = viper.GetString("id")
+	token = viper.GetString("token")
 }

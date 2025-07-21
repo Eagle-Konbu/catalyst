@@ -1,6 +1,5 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -28,6 +27,9 @@ to quickly create a Cobra application.`,
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("light %s called\n", args[0])
+		// id, tokenを利用
+		fmt.Printf("id: %s\n", id)
+		fmt.Printf("token: %s\n", token)
 	},
 }
 
