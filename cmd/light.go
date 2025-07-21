@@ -44,7 +44,7 @@ to quickly create a Cobra application.`,
 			fmt.Fprintln(cmd.ErrOrStderr(), "failed to switch light:", err)
 			os.Exit(1)
 		}
-		fmt.Printf("light %s executed successfully\n", args[0])
+		fmt.Printf("light has been turned %s successfully :)\n", args[0])
 	},
 }
 
