@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -26,6 +27,10 @@ to quickly create a Cobra application.`,
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		if id == "" || token == "" {
+			fmt.Fprintln(cmd.ErrOrStderr(), "id or token is not set. Please check your config file or environment variables.")
+			os.Exit(1)
+		}
 		fmt.Printf("light %s called\n", args[0])
 		// id, tokenを利用
 		fmt.Printf("id: %s\n", id)
