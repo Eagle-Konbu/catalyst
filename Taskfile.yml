@@ -6,7 +6,7 @@ tasks:
       GOARCH: arm64
       GOOS: darwin
     cmds:
-      - GOARCH={{.GOARCH}} GOOS={{.GOOS}} go build -o bin/catalyst main.go
+      - GOARCH={{.GOARCH}} GOOS={{.GOOS}} CGO_ENABLED=0 go build -o bin/catalyst main.go
     sources:
       - '**/*.go'
     generates:
