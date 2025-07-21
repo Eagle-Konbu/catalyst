@@ -11,7 +11,8 @@ type AirconUsecase struct {
 	api *infrastructure.NatureRemoAPI
 }
 
-func NewAirconUsecase(api *infrastructure.NatureRemoAPI, id string) *AirconUsecase {
+func NewAirconUsecase(id, token string) *AirconUsecase {
+	api := infrastructure.NewNatureRemoAPI(token)
 	return &AirconUsecase{api: api, id: id}
 }
 
