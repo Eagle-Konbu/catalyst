@@ -11,6 +11,10 @@ func NewLightUsecase(token string) *LightUsecase {
 	return &LightUsecase{API: api}
 }
 
-func (u *LightUsecase) SwitchLight(id string, button string) error {
-	return u.API.SwitchLight(id, button)
+func (u *LightUsecase) TurnOnLight(id string) error {
+	return u.API.SwitchLight(id, "on")
+}
+
+func (u *LightUsecase) TurnOffLight(id string) error {
+	return u.API.SwitchLight(id, "off")
 }
