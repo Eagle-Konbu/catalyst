@@ -40,12 +40,14 @@ You can provide your API token and appliance ID in either of the following ways:
 - **Config file:** Create a file named `.catalyst.yaml` in your home directory with the following content:
 
   ```yaml
-  id: <YOUR_APPLIANCE_ID>
+  lightId: <YOUR_LIGHT_APPLIANCE_ID>
+  acId: <YOUR_AC_APPLIANCE_ID>
   token: <YOUR_API_TOKEN>
   ```
 
 - **Environment variables:**
-  - `id`: Appliance ID
+  - `lightId`: Appliance ID for light
+  - `acId`: Appliance ID for AC
   - `token`: Nature Remo API token
 
 3. **Run the CLI:**
@@ -56,11 +58,39 @@ To turn the light on:
 catalyst light on
 ```
 
+
 To turn the light off:
 
 ```
 catalyst light off
 ```
+
+To control the air conditioner (AC):
+
+To turn the AC on:
+
+```
+catalyst ac on
+```
+
+To turn the AC off:
+
+```
+catalyst ac off
+```
+
+You can also specify additional options depending on your AC and API support, for example:
+
+```
+catalyst ac set --temp 25 --mode cool --vol low
+```
+
+Refer to the help for more details:
+
+```
+catalyst ac --help
+```
+
 
 ## License
 
