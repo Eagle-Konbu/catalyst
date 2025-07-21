@@ -15,6 +15,7 @@ func NewNatureRemoAPI(token string) *NatureRemoAPI {
 	return &NatureRemoAPI{Token: token}
 }
 
+// Reference: https://swagger.nature.global/#/default/post_1_appliances__applianceid__light
 func (api *NatureRemoAPI) SwitchLight(id, button string) error {
 	endpoint := fmt.Sprintf("https://api.nature.global/1/appliances/%s/light", id)
 	data := url.Values{}
