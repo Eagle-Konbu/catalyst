@@ -67,22 +67,8 @@ catalyst light off
 
 To control the air conditioner (AC):
 
-To turn the AC on:
-
 ```
-catalyst ac on
-```
-
-To turn the AC off:
-
-```
-catalyst ac off
-```
-
-You can also specify additional options depending on your AC and API support, for example:
-
-```
-catalyst ac set --temp 25 --mode cool --vol low
+catalyst ac cool 25
 ```
 
 Refer to the help for more details:
