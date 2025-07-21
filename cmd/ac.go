@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/spf13/cobra"
 )
@@ -12,28 +13,39 @@ import (
 // acCmd represents the ac command
 var acCmd = &cobra.Command{
 	Use:   "ac",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Control the air conditioner mode and temperature",
+	Long: `Set the air conditioner to a specific mode (cool, dry, or warm) and temperature (16.0-30.0C in 0.5C increments).
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Example:
+  catalyst ac cool 24.5
+This sets the air conditioner to cool mode at 24.5C.`,
+	Args: cobra.MatchAll(cobra.ExactArgs(2), func(cmd *cobra.Command, args []string) error {
+		mode := args[0]
+		switch mode {
+		case "cool", "dry", "warm":
+			// valid modes
+		default:
+			return fmt.Errorf("mode must be one of 'cool', 'dry', or 'warm'")
+		}
+		re := regexp.MustCompile(`^(1[6-9]|2[0-9])(\.0|\.5)?$|^30(\.0)?$`)
+		if !re.MatchString(args[1]) {
+			return fmt.Errorf("temperature must be 16.0 to 30.0 in 0.5 increments")
+		}
+		var temp float64
+		_, err := fmt.Sscanf(args[1], "%f", &temp)
+		if err != nil {
+			return fmt.Errorf("temperature must be a number")
+		}
+		return nil
+	}),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Not Implemented yet.")
+		mode := args[0]
+		var temp float64
+		fmt.Sscanf(args[1], "%f", &temp)
+		fmt.Printf("Mode: %s, Set temperature to %.1f°C\n", mode, temp)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(acCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// acCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// acCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
