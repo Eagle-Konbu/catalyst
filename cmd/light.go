@@ -50,9 +50,9 @@ func init() {
 }
 
 func getLightUsecaseOrExit(cmd *cobra.Command) *usecase.LightUsecase {
-	if id == "" || token == "" {
-		fmt.Fprintln(cmd.ErrOrStderr(), "id or token is not set. Please check your config file or environment variables.")
+	if lightId == "" || token == "" {
+		fmt.Fprintln(cmd.ErrOrStderr(), "lightId or token is not set. Please check your config file or environment variables.")
 		os.Exit(1)
 	}
-	return usecase.NewLightUsecase(id, token)
+	return usecase.NewLightUsecase(lightId, token)
 }

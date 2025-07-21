@@ -8,9 +8,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-var id string
-var token string
+var (
+	cfgFile string
+	lightId string
+	acId    string
+	token   string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -73,6 +76,7 @@ func initConfig() {
 		fmt.Fprintln(os.Stderr, "Error reading config file:", err)
 	}
 
-	id = viper.GetString("id")
+	lightId = viper.GetString("lightId")
+	acId = viper.GetString("acId")
 	token = viper.GetString("token")
 }
