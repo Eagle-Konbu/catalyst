@@ -5,8 +5,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 
+	"github.com/Eagle-Konbu/catalyst/internal/usecase"
 	"github.com/spf13/cobra"
 )
 
@@ -42,7 +44,19 @@ This sets the air conditioner to cool mode at 24.5C.`,
 		mode := args[0]
 		var temp float64
 		fmt.Sscanf(args[1], "%f", &temp)
-		fmt.Printf("Mode: %s, Set temperature to %.1f°C\n", mode, temp)
+
+		if acId == "" || token == "" {
+			fmt.Fprintln(cmd.ErrOrStderr(), "acId or token is not set. Please check your config file or environment variables.")
+			os.Exit(1)
+		}
+		uc := usecase.NewAirconUsecase(acId, token)
+
+		if err := uc.SwitchAirconSettings(mode, temp); err != nil {
+			fmt.Fprintln(cmd.ErrOrStderr(), "Failed to switch air conditioner settings:", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("Air conditioner settings has been updated successfully!")
 	},
 }
 
