@@ -33,7 +33,6 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 
-		// usecase呼び出し
 		uc := usecase.NewLightUsecase(id, token)
 		var err error
 		if args[0] == "on" {

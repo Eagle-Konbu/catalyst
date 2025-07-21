@@ -89,12 +89,11 @@ func initConfig() {
 
 	viper.AutomaticEnv() // read in environment variables that match
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	// If a config file is found, read it in. Print error if reading fails.
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Fprintln(os.Stderr, "Error reading config file:", err)
 	}
 
-	// 設定ファイルからid, tokenを読み込む
 	id = viper.GetString("id")
 	token = viper.GetString("token")
 }
