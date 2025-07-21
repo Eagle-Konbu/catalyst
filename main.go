@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/Eagle-Konbu/nature-remo-cli/cmd"
+import "github.com/Eagle-Konbu/catalyst/cmd"
 
 func main() {
 	cmd.Execute()
