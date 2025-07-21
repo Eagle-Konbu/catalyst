@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Eagle-Konbu/catalyst/internal/usecase"
 	"github.com/spf13/cobra"
 )
 
@@ -31,10 +32,20 @@ to quickly create a Cobra application.`,
 			fmt.Fprintln(cmd.ErrOrStderr(), "id or token is not set. Please check your config file or environment variables.")
 			os.Exit(1)
 		}
-		fmt.Printf("light %s called\n", args[0])
-		// id, tokenを利用
-		fmt.Printf("id: %s\n", id)
-		fmt.Printf("token: %s\n", token)
+
+		// usecase呼び出し
+		uc := usecase.NewLightUsecase(id, token)
+		var err error
+		if args[0] == "on" {
+			err = uc.TurnOnLight()
+		} else {
+			err = uc.TurnOffLight()
+		}
+		if err != nil {
+			fmt.Fprintln(cmd.ErrOrStderr(), "failed to switch light:", err)
+			os.Exit(1)
+		}
+		fmt.Printf("light %s executed successfully\n", args[0])
 	},
 }
 
