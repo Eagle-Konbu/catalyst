@@ -1,0 +1,16 @@
+{
+  "cSpell.language": "en,ja",
+  "cSpell.enabled": true,
+  "cSpell.words": [
+    "Aircon",
+    "Usecase",
+    "NatureRemo",
+    "api",
+    "id",
+    "token"
+  ],
+  "cSpell.ignorePaths": [
+    "bin/**",
+    "**/vendor/**"
+  ]
+}
