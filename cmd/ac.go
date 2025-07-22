@@ -70,9 +70,40 @@ func runAcSubcommand(cmd *cobra.Command, mode string, args []string) {
 	fmt.Println("Air conditioner settings has been updated successfully!")
 }
 
+var statusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "Get the current status of the air conditioner",
+	Args:  cobra.NoArgs,
+	Run: func(cmd *cobra.Command, args []string) {
+		if acId == "" || token == "" {
+			fmt.Fprintln(cmd.ErrOrStderr(), "acId or token is not set. Please check your config file or environment variables.")
+			os.Exit(1)
+		}
+		uc := usecase.NewAirconUsecase(acId, token)
+		status, err := uc.GetAirconStatus()
+		if err != nil {
+			fmt.Fprintln(cmd.ErrOrStderr(), "Failed to get air conditioner status:", err)
+			os.Exit(1)
+		}
+
+		var tempUnit string
+		switch status.TempUnit {
+		case "c":
+			tempUnit = "℃"
+		case "f":
+			tempUnit = "°F"
+		default:
+			tempUnit = ""
+		}
+
+		fmt.Printf("Mode: %s, Temperature: %.1f%s\n", status.Mode, status.Temperature, tempUnit)
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(acCmd)
 	acCmd.AddCommand(coolCmd)
 	acCmd.AddCommand(dryCmd)
 	acCmd.AddCommand(warmCmd)
+	acCmd.AddCommand(statusCmd)
 }

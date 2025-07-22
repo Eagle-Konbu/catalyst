@@ -1,9 +1,12 @@
 package infrastructure
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -66,4 +69,70 @@ func (api *NatureRemoAPI) SwitchAirconSettings(id, mode, temp string) error {
 		return fmt.Errorf("unexpected status: %s", resp.Status)
 	}
 	return nil
+}
+
+// Appliance and AirconStatus structures for parsing response
+type Appliance struct {
+	ID       string `json:"id"`
+	Type     string `json:"type"`
+	Settings *struct {
+		Temp     string `json:"temp"`
+		Mode     string `json:"mode"`
+		TempUnit string `json:"temp_unit"`
+	} `json:"settings"`
+}
+
+type AirconStatus struct {
+	Mode        string
+	Temperature float64
+	TempUnit    string
+}
+
+// GetAppliances fetches the list of appliances from Nature Remo API
+func (api *NatureRemoAPI) GetAppliances() ([]Appliance, error) {
+	endpoint := "https://api.nature.global/1/appliances"
+	req, err := http.NewRequest("GET", endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+api.Token)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status: %s", resp.Status)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var appliances []Appliance
+	err = json.Unmarshal(body, &appliances)
+	if err != nil {
+		return nil, err
+	}
+	return appliances, nil
+}
+
+// GetAirconStatus fetches the mode and temperature for the given acId
+func (api *NatureRemoAPI) GetAirconStatus(acId string) (*AirconStatus, error) {
+	appliances, err := api.GetAppliances()
+	if err != nil {
+		return nil, err
+	}
+	for _, a := range appliances {
+		if a.ID == acId && a.Type == "AC" && a.Settings != nil {
+			temp, _ := strconv.ParseFloat(a.Settings.Temp, 64)
+			return &AirconStatus{
+				Mode:        a.Settings.Mode,
+				Temperature: temp,
+				TempUnit:    a.Settings.TempUnit,
+			}, nil
+		}
+	}
+	return nil, fmt.Errorf("AC with id %s not found", acId)
 }

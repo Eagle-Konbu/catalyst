@@ -25,3 +25,21 @@ func (u *AirconUsecase) SwitchAirconSettings(mode string, temp float64) error {
 	}
 	return u.api.SwitchAirconSettings(u.id, mode, tempStr)
 }
+
+type AirconStatus struct {
+	Mode        string
+	Temperature float64
+	TempUnit    string
+}
+
+func (u *AirconUsecase) GetAirconStatus() (*AirconStatus, error) {
+	status, err := u.api.GetAirconStatus(u.id)
+	if err != nil {
+		return nil, err
+	}
+	return &AirconStatus{
+		Mode:        status.Mode,
+		Temperature: status.Temperature,
+		TempUnit:    status.TempUnit,
+	}, nil
+}
