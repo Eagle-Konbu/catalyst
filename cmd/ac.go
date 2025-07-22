@@ -76,7 +76,7 @@ func runAcSubcommand(cmd *cobra.Command, mode string, args []string) {
 		fmt.Fprintln(cmd.ErrOrStderr(), "Failed to switch air conditioner settings:", err)
 		os.Exit(1)
 	}
-	fmt.Println("Air conditioner settings has been updated successfully :)")
+	fmt.Println("Air conditioner settings has been updated successfully (´・ω・`)")
 }
 
 var statusCmd = &cobra.Command{

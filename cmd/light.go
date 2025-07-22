@@ -35,7 +35,7 @@ var onCmd = &cobra.Command{
 			fmt.Fprintln(cmd.ErrOrStderr(), "failed to turn on light:", err)
 			os.Exit(1)
 		}
-		fmt.Println("The light has been turned on successfully :)")
+		fmt.Println("The light has been turned on successfully (´・ω・`)")
 	},
 }
 
@@ -57,7 +57,7 @@ var offCmd = &cobra.Command{
 			fmt.Fprintln(cmd.ErrOrStderr(), "failed to turn off light:", err)
 			os.Exit(1)
 		}
-		fmt.Println("The light has been turned off successfully :)")
+		fmt.Println("The light has been turned off successfully (´・ω・`)")
 	},
 }
 
