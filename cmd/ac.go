@@ -67,7 +67,7 @@ func runAcSubcommand(cmd *cobra.Command, mode string, args []string) {
 		fmt.Fprintln(cmd.ErrOrStderr(), "Failed to switch air conditioner settings:", err)
 		os.Exit(1)
 	}
-	fmt.Println("Air conditioner settings has been updated successfully!")
+	fmt.Println("Air conditioner settings has been updated successfully :)")
 }
 
 var statusCmd = &cobra.Command{
@@ -86,17 +86,7 @@ var statusCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		var tempUnit string
-		switch status.TempUnit {
-		case "c":
-			tempUnit = "℃"
-		case "f":
-			tempUnit = "°F"
-		default:
-			tempUnit = ""
-		}
-
-		fmt.Printf("Mode: %s, Temperature: %.1f%s\n", status.Mode, status.Temperature, tempUnit)
+		fmt.Printf("Mode: %s, Temperature: %.1f\n", status.Mode, status.Temperature)
 	},
 }
 

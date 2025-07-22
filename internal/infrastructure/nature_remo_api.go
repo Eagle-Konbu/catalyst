@@ -3,10 +3,9 @@ package infrastructure
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 )
 
@@ -82,13 +81,7 @@ type Appliance struct {
 	} `json:"settings"`
 }
 
-type AirconStatus struct {
-	Mode        string
-	Temperature float64
-	TempUnit    string
-}
-
-// GetAppliances fetches the list of appliances from Nature Remo API
+// Reference: https://swagger.nature.global/#/default/get_1_appliances
 func (api *NatureRemoAPI) GetAppliances() ([]Appliance, error) {
 	endpoint := "https://api.nature.global/1/appliances"
 	req, err := http.NewRequest("GET", endpoint, nil)
@@ -106,7 +99,7 @@ func (api *NatureRemoAPI) GetAppliances() ([]Appliance, error) {
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status: %s", resp.Status)
 	}
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -116,23 +109,4 @@ func (api *NatureRemoAPI) GetAppliances() ([]Appliance, error) {
 		return nil, err
 	}
 	return appliances, nil
-}
-
-// GetAirconStatus fetches the mode and temperature for the given acId
-func (api *NatureRemoAPI) GetAirconStatus(acId string) (*AirconStatus, error) {
-	appliances, err := api.GetAppliances()
-	if err != nil {
-		return nil, err
-	}
-	for _, a := range appliances {
-		if a.ID == acId && a.Type == "AC" && a.Settings != nil {
-			temp, _ := strconv.ParseFloat(a.Settings.Temp, 64)
-			return &AirconStatus{
-				Mode:        a.Settings.Mode,
-				Temperature: temp,
-				TempUnit:    a.Settings.TempUnit,
-			}, nil
-		}
-	}
-	return nil, fmt.Errorf("AC with id %s not found", acId)
 }
