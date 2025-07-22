@@ -22,7 +22,7 @@ var onCmd = &cobra.Command{
 	Short: "Turn the light on",
 	Run: func(cmd *cobra.Command, args []string) {
 		s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-		s.Suffix = "Turning on the light..."
+		s.Suffix = " Turning on the light..."
 		s.Start()
 
 		uc := getLightUsecaseOrExit(cmd)
@@ -44,7 +44,7 @@ var offCmd = &cobra.Command{
 	Short: "Turn the light off",
 	Run: func(cmd *cobra.Command, args []string) {
 		s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-		s.Suffix = "Turning off the light..."
+		s.Suffix = " Turning off the light..."
 		s.Start()
 
 		uc := getLightUsecaseOrExit(cmd)
