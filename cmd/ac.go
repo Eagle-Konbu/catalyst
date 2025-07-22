@@ -1,14 +1,13 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
 	"os"
 	"regexp"
+	"time"
 
 	"github.com/Eagle-Konbu/catalyst/internal/usecase"
+	"github.com/briandowns/spinner"
 	"github.com/spf13/cobra"
 )
 
@@ -62,8 +61,18 @@ func runAcSubcommand(cmd *cobra.Command, mode string, args []string) {
 		fmt.Fprintln(cmd.ErrOrStderr(), "acId or token is not set. Please check your config file or environment variables.")
 		os.Exit(1)
 	}
+
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Suffix = "Updating air conditioner settings..."
+	s.Start()
+
 	uc := usecase.NewAirconUsecase(acId, token)
-	if err := uc.SwitchAirconSettings(mode, temp); err != nil {
+	err = uc.SwitchAirconSettings(mode, temp)
+
+	s.Stop()
+	fmt.Print("\r") // clear line
+
+	if err != nil {
 		fmt.Fprintln(cmd.ErrOrStderr(), "Failed to switch air conditioner settings:", err)
 		os.Exit(1)
 	}
@@ -79,13 +88,20 @@ var statusCmd = &cobra.Command{
 			fmt.Fprintln(cmd.ErrOrStderr(), "acId or token is not set. Please check your config file or environment variables.")
 			os.Exit(1)
 		}
+
+		s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+		s.Suffix = " Fetching status..."
+		s.Start()
+
 		uc := usecase.NewAirconUsecase(acId, token)
 		status, err := uc.GetAirconStatus()
+
+		s.Stop()
+		fmt.Print("\r") // clear line
 		if err != nil {
 			fmt.Fprintln(cmd.ErrOrStderr(), "Failed to get air conditioner status:", err)
 			os.Exit(1)
 		}
-
 		fmt.Printf("Mode: %s, Temperature: %.1f\n", status.Mode, status.Temperature)
 	},
 }

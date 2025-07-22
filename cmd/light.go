@@ -3,8 +3,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/Eagle-Konbu/catalyst/internal/usecase"
+	"github.com/briandowns/spinner"
 	"github.com/spf13/cobra"
 )
 
@@ -19,8 +21,16 @@ var onCmd = &cobra.Command{
 	Use:   "on",
 	Short: "Turn the light on",
 	Run: func(cmd *cobra.Command, args []string) {
+		s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+		s.Suffix = "Turning on the light..."
+		s.Start()
+
 		uc := getLightUsecaseOrExit(cmd)
 		err := uc.TurnOnLight()
+
+		s.Stop()
+		fmt.Print("\r") // clear line
+
 		if err != nil {
 			fmt.Fprintln(cmd.ErrOrStderr(), "failed to turn on light:", err)
 			os.Exit(1)
@@ -33,8 +43,16 @@ var offCmd = &cobra.Command{
 	Use:   "off",
 	Short: "Turn the light off",
 	Run: func(cmd *cobra.Command, args []string) {
+		s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+		s.Suffix = "Turning off the light..."
+		s.Start()
+
 		uc := getLightUsecaseOrExit(cmd)
 		err := uc.TurnOffLight()
+
+		s.Stop()
+		fmt.Print("\r") // clear line
+
 		if err != nil {
 			fmt.Fprintln(cmd.ErrOrStderr(), "failed to turn off light:", err)
 			os.Exit(1)
