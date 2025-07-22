@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"regexp"
-	"time"
 
+	"github.com/Eagle-Konbu/catalyst/internal/misc"
 	"github.com/Eagle-Konbu/catalyst/internal/usecase"
-	"github.com/briandowns/spinner"
 	"github.com/spf13/cobra"
 )
 
@@ -48,35 +46,28 @@ var warmCmd = &cobra.Command{
 func runAcSubcommand(cmd *cobra.Command, mode string, args []string) {
 	re := regexp.MustCompile(`^(1[6-9]|2[0-9])(\.0|\.5)?$|^30(\.0)?$`)
 	if !re.MatchString(args[0]) {
-		fmt.Fprintln(cmd.ErrOrStderr(), "temperature must be 16.0 to 30.0 in 0.5 increments")
-		os.Exit(1)
+		misc.PrintErrorAndExit(cmd, "temperature must be 16.0 to 30.0 in 0.5 increments", nil)
 	}
 	var temp float64
 	_, err := fmt.Sscanf(args[0], "%f", &temp)
 	if err != nil {
-		fmt.Fprintln(cmd.ErrOrStderr(), "temperature must be a number")
-		os.Exit(1)
+		misc.PrintErrorAndExit(cmd, "temperature must be a number", err)
 	}
 	if acId == "" || token == "" {
-		fmt.Fprintln(cmd.ErrOrStderr(), "acId or token is not set. Please check your config file or environment variables.")
-		os.Exit(1)
+		misc.PrintErrorAndExit(cmd, "acId or token is not set. Please check your config file or environment variables.", nil)
 	}
 
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	s.Suffix = "Updating air conditioner settings..."
-	s.Start()
-
+	s := misc.NewSpinner("Updating air conditioner settings...")
 	uc := usecase.NewAirconUsecase(acId, token)
 	err = uc.SwitchAirconSettings(mode, temp)
 
 	s.Stop()
-	fmt.Print("\r") // clear line
+	misc.PrintClearLine()
 
 	if err != nil {
-		fmt.Fprintln(cmd.ErrOrStderr(), "Failed to switch air conditioner settings:", err)
-		os.Exit(1)
+		misc.PrintErrorAndExit(cmd, "Failed to switch air conditioner settings", err)
 	}
-	fmt.Println("Air conditioner settings has been updated successfully (´・ω・`)")
+	misc.PrintSuccess("Air conditioner settings has been updated successfully (´・ω・`)")
 }
 
 var statusCmd = &cobra.Command{
@@ -85,22 +76,17 @@ var statusCmd = &cobra.Command{
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		if acId == "" || token == "" {
-			fmt.Fprintln(cmd.ErrOrStderr(), "acId or token is not set. Please check your config file or environment variables.")
-			os.Exit(1)
+			misc.PrintErrorAndExit(cmd, "acId or token is not set. Please check your config file or environment variables.", nil)
 		}
 
-		s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-		s.Suffix = " Fetching status..."
-		s.Start()
-
+		s := misc.NewSpinner(" Fetching status...")
 		uc := usecase.NewAirconUsecase(acId, token)
 		status, err := uc.GetAirconStatus()
 
 		s.Stop()
-		fmt.Print("\r") // clear line
+		misc.PrintClearLine()
 		if err != nil {
-			fmt.Fprintln(cmd.ErrOrStderr(), "Failed to get air conditioner status:", err)
-			os.Exit(1)
+			misc.PrintErrorAndExit(cmd, "Failed to get air conditioner status", err)
 		}
 		fmt.Printf("Mode: %s, Temperature: %.1f\n", status.Mode, status.Temperature)
 	},
