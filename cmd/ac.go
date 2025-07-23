@@ -45,6 +45,34 @@ var warmCmd = &cobra.Command{
 	},
 }
 
+var acOffCmd = &cobra.Command{
+	Use:   "off",
+	Short: "Turn off the air conditioner",
+	Args:  cobra.NoArgs,
+	Run: func(cmd *cobra.Command, args []string) {
+		if acId == "" || token == "" {
+			fmt.Fprintln(cmd.ErrOrStderr(), "acId or token is not set. Please check your config file or environment variables.")
+			os.Exit(1)
+		}
+
+		s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+		s.Suffix = " Turning off the air conditioner..."
+		s.Start()
+
+		uc := usecase.NewAirconUsecase(acId, token)
+		err := uc.TurnOff()
+
+		s.Stop()
+		fmt.Print("\r") // clear line
+
+		if err != nil {
+			fmt.Fprintln(cmd.ErrOrStderr(), "Failed to turn off the air conditioner:", err)
+			os.Exit(1)
+		}
+		fmt.Println("Air conditioner has been turned off successfully (´・ω・`)")
+	},
+}
+
 func runAcSubcommand(cmd *cobra.Command, mode string, args []string) {
 	re := regexp.MustCompile(`^(1[6-9]|2[0-9])(\.0|\.5)?$|^30(\.0)?$`)
 	if !re.MatchString(args[0]) {
@@ -63,7 +91,7 @@ func runAcSubcommand(cmd *cobra.Command, mode string, args []string) {
 	}
 
 	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	s.Suffix = "Updating air conditioner settings..."
+	s.Suffix = " Updating air conditioner settings..."
 	s.Start()
 
 	uc := usecase.NewAirconUsecase(acId, token)
@@ -112,4 +140,5 @@ func init() {
 	acCmd.AddCommand(dryCmd)
 	acCmd.AddCommand(warmCmd)
 	acCmd.AddCommand(statusCmd)
+	acCmd.AddCommand(acOffCmd)
 }

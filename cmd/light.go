@@ -17,7 +17,7 @@ var lightCmd = &cobra.Command{
 	Long:  `Control the light device using subcommands (on/off).`,
 }
 
-var onCmd = &cobra.Command{
+var lightOnCmd = &cobra.Command{
 	Use:   "on",
 	Short: "Turn the light on",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -39,7 +39,7 @@ var onCmd = &cobra.Command{
 	},
 }
 
-var offCmd = &cobra.Command{
+var lightOffCmd = &cobra.Command{
 	Use:   "off",
 	Short: "Turn the light off",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -63,8 +63,8 @@ var offCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(lightCmd)
-	lightCmd.AddCommand(onCmd)
-	lightCmd.AddCommand(offCmd)
+	lightCmd.AddCommand(lightOnCmd)
+	lightCmd.AddCommand(lightOffCmd)
 }
 
 func getLightUsecaseOrExit(cmd *cobra.Command) *usecase.LightUsecase {
