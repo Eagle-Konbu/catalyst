@@ -24,7 +24,11 @@ func (u *AirconUsecase) SwitchAirconSettings(mode string, temp float64) error {
 	} else {
 		tempStr = strconv.FormatFloat(temp, 'f', 1, 64)
 	}
-	return u.api.SwitchAirconSettings(u.id, mode, tempStr)
+	return u.api.SwitchAirconSettings(u.id, mode, tempStr, infrastructure.PowerOn)
+}
+
+func (u *AirconUsecase) TurnOff() error {
+	return u.api.SwitchAirconSettings(u.id, "", "", infrastructure.PowerOff)
 }
 
 type AirconStatus struct {

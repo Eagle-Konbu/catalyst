@@ -17,6 +17,13 @@ func NewNatureRemoAPI(token string) *NatureRemoAPI {
 	return &NatureRemoAPI{Token: token}
 }
 
+type PowerState string
+
+const (
+	PowerOn  PowerState = "on"
+	PowerOff PowerState = "off"
+)
+
 // Reference: https://swagger.nature.global/#/default/post_1_appliances__applianceid__light
 func (api *NatureRemoAPI) SwitchLight(id, button string) error {
 	endpoint := fmt.Sprintf("https://api.nature.global/1/appliances/%s/light", id)
@@ -42,14 +49,18 @@ func (api *NatureRemoAPI) SwitchLight(id, button string) error {
 }
 
 // Reference: https://swagger.nature.global/#/default/post_1_appliances__applianceid__aircon_settings
-func (api *NatureRemoAPI) SwitchAirconSettings(id, mode, temp string) error {
+func (api *NatureRemoAPI) SwitchAirconSettings(id, mode, temp string, power PowerState) error {
 	endpoint := fmt.Sprintf("https://api.nature.global/1/appliances/%s/aircon_settings", id)
 	data := url.Values{}
-	if mode != "" {
-		data.Set("operation_mode", mode)
-	}
-	if temp != "" {
-		data.Set("temperature", temp)
+	if power == PowerOff {
+		data.Set("button", "power-off")
+	} else {
+		if mode != "" {
+			data.Set("operation_mode", mode)
+		}
+		if temp != "" {
+			data.Set("temperature", temp)
+		}
 	}
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(data.Encode()))
 	if err != nil {
