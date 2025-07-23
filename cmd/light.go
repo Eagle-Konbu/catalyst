@@ -62,7 +62,10 @@ var lightOffCmd = &cobra.Command{
 }
 
 func init() {
+	cobra.EnableCommandSorting = false
+
 	rootCmd.AddCommand(lightCmd)
+
 	lightCmd.AddCommand(lightOnCmd)
 	lightCmd.AddCommand(lightOffCmd)
 }

@@ -135,10 +135,15 @@ var statusCmd = &cobra.Command{
 }
 
 func init() {
+	cobra.EnableCommandSorting = false
+
 	rootCmd.AddCommand(acCmd)
+
 	acCmd.AddCommand(coolCmd)
 	acCmd.AddCommand(dryCmd)
 	acCmd.AddCommand(warmCmd)
-	acCmd.AddCommand(statusCmd)
+
 	acCmd.AddCommand(acOffCmd)
+
+	acCmd.AddCommand(statusCmd)
 }
