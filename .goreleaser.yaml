@@ -49,17 +49,17 @@ changelog:
       - Merge pull request
       - Merge branch
 
-brews:
+homebrew_casks:
   - name: catalyst
     repository:
       owner: Eagle-Konbu
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    directory: Formula
     homepage: "https://github.com/Eagle-Konbu/catalyst"
     description: "CLI tool for controlling Nature Remo devices"
-    license: "MIT"
-    install: |
-      bin.install "catalyst"
-    test: |
-      system "#{bin}/catalyst", "--help"
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/catalyst"]
+          end
