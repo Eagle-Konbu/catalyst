@@ -18,13 +18,15 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "catalyst",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "A CLI tool to control smart home devices via Nature Remo API",
+	Long: `Catalyst is a command-line interface tool for controlling smart home devices
+through the Nature Remo API.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Supported devices:
+  - Air conditioner: Set mode (cool/dry/warm) and temperature
+  - Light: Turn on/off
+
+Configuration is read from ~/.catalyst.yaml or specified via --config flag.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
