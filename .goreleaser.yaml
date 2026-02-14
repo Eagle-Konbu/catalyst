@@ -62,4 +62,4 @@ brews:
     install: |
       bin.install "catalyst"
     test: |
-      system "#{bin}/catalyst", "--help"T
+      system "#{bin}/catalyst", "--help"
